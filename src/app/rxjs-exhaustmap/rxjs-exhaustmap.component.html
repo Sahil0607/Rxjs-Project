@@ -1,0 +1,13 @@
+<p>rxjs-exhaustmap works!</p>
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div>
+        <h3>Exhaust Map Value: {{ exhaustMapValue }}</h3>
+        <h3>Exhaust Map Count: {{ exhaustMapCount }}</h3>
+    </div>
+    <div>
+        <label for="value1">Value1 </label>
+        <input type="text" id="value1" name="value1" formControlName="value1">
+    </div>
+    <button type="submit" [disabled]="!form.valid">Submit</button>
+    <button #saveButton>Save</button>
+</form>

@@ -1,0 +1,17 @@
+<p>rxjs-operator works!</p>
+<Button (click)="changeCourseType()"> {{ advanceCourseType ? 'Beginer Course' : 'Advance Course'}} </Button>
+<h2> {{ advanceCourseType ? 'Advance Course' : 'Beginer Course'}} </h2>
+<ul *ngIf="advanceCourseType">
+    <li *ngFor="let courses of advanceCourse$ | async">
+        <h3> Category: {{courses.category}} </h3>
+        <p> Description: {{courses.description}} </p>
+        <p> Course Count: {{courses.lessonCount}} </p>
+    </li>
+</ul>
+<ul *ngIf="!advanceCourseType">
+    <li *ngFor="let courses of beginerCourse$ | async">
+        <h3> Category: {{courses.category}} </h3>
+        <p> Description: {{courses.description}} </p>
+        <p> Course Count: {{courses.lessonCount}} </p>
+    </li>
+</ul>
