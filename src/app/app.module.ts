@@ -13,6 +13,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RxjsMergeComponent } from './rxjs-merge/rxjs-merge.component';
 import { RxjsExhaustmapComponent } from './rxjs-exhaustmap/rxjs-exhaustmap.component';
 import { RxjsSwitchmapComponent } from './rxjs-switchmap/rxjs-switchmap.component';
+import { RxjsErrorHandlingComponent } from './rxjs-error-handling/rxjs-error-handling.component';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { RxjsSwitchmapComponent } from './rxjs-switchmap/rxjs-switchmap.componen
     RxjsMergeComponent,
     RxjsExhaustmapComponent,
     RxjsSwitchmapComponent,
+    RxjsErrorHandlingComponent,
   ],
   imports: [
     BrowserModule,

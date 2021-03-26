@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { fromEvent, interval, Observable, of } from 'rxjs';
-import { debounceTime, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
+import { fromEvent, interval, Observable, of, from, timer } from 'rxjs';
+import { catchError, debounceTime, distinctUntilChanged, map, mergeMap, switchMap, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-rxjs-switchmap',
@@ -15,8 +15,11 @@ export class RxjsSwitchmapComponent implements OnInit, AfterViewInit {
   constructor() { }
 
   ngOnInit(): void {
-    this.rxjsSwitchMap();
-    this.rxjsOf()
+    // this.rxjsSwitchMap();
+    // this.rxjsOf();
+    // this.rxjsTapOperator();
+    // this.rxjsDistinctUntilChanged();
+    this.rxjsFrom();
   }
 
   rxjsSwitchMap() {
@@ -43,9 +46,20 @@ export class RxjsSwitchmapComponent implements OnInit, AfterViewInit {
     .pipe(
       map(ev => ev.target.value),
       debounceTime(500),
-      distinctUntilChanged(),
+      distinctUntilChanged(),  // Only emit when the current value is different than the last
       // switchMap((search) => this.printInputValue(search))    // remove older ongoing req and send only new on
     ).subscribe(search => this.debounceTimeValue = search);
+  }
+
+  rxjsDistinctUntilChanged() {
+    // only output distinct values, based on the last emitted value
+    const source$ = from([1, 1, 2, 2, 3, 3]);
+    source$.pipe(distinctUntilChanged()).subscribe(console.log);  // output: 1,2,3
+    
+    const sampleObject = { name: 'Test' };
+    const source1$ = from([sampleObject, sampleObject, sampleObject]);  //Objects must be same reference
+    source1$.pipe(distinctUntilChanged()).subscribe(console.log);  // only emit distinct objects, based on last emitted value
+      // output: {name: 'Test'}  
   }
 
   printInputValue(search){
@@ -61,5 +75,49 @@ export class RxjsSwitchmapComponent implements OnInit, AfterViewInit {
     // Output: Rxjs Of:  1  
     // Rxjs Of:  2
     // Rxjs Of:  3
+    const myFunction = () => {
+      return 'Print this function line usinf From operator'
+    };
+    of(myFunction()).subscribe(val => console.log('Rxjs from function: ', val));
+    // output: Rxjs from function: Print this function line using of operator
+    // from() will print each latter in onservable stream
+  }
+
+  rxjsTapOperator() {
+    // tap operator and it is used for side effects inside a stream such as logging
+    const num = of(10,20,30,40,50);
+
+    const exmaple = num.pipe(
+      tap(val => console.log('Tap Val: ', val)),  // Tap used for logging
+      map(val => val + 1),  // map will transform data
+      tap(      // tap accept value, error and complete
+        val => console.log(val),
+        error => console.log(error),
+        () => console.log('Tap on Complete')
+      ));
+
+      exmaple.subscribe(val => console.log('Tap final Value ', val));
+  }
+
+  rxjsFrom() {
+    // Creates an Observable from an Array, an array-like object, a Promise, an iterable object, or an Observable-like object.
+
+    const arrayVal = [12,23,34,54];
+    const myFunction = () => {
+      return 'ABC'  //Print this function line usinf From operator
+    }
+    const objectVal = {
+      fname: 'Sahil',
+      lname: 'Patel',
+      age: 27
+    };
+
+    // Convert array to rxjs observable stream
+    const obs1$ = from(arrayVal);
+    obs1$.subscribe(val => console.log('Rxjs From ', val));
+
+    // Print ffunction line usinf from()
+    from(myFunction()).subscribe(val => console.log('Rxjs from function: ', val));
+    // from() will print each charactor in stream
   }
 }
