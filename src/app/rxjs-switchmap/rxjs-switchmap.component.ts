@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { fromEvent, interval, Observable, of, from, timer } from 'rxjs';
-import { catchError, debounceTime, distinctUntilChanged, map, mergeMap, switchMap, tap } from 'rxjs/operators';
+import { catchError, debounceTime, distinctUntilChanged, map, mergeMap, startWith, switchMap, tap, throttle, throttleTime } from 'rxjs/operators';
 
 @Component({
   selector: 'app-rxjs-switchmap',
@@ -39,16 +39,43 @@ export class RxjsSwitchmapComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
+    // Use either one of them operation to achive search opration.
+    // this.rxjsDebouncetime();
+    this.rxjsThrottling();
+  }
+
+  rxjsDebouncetime() {
     // debounceTime is best use in search keyup event
     // It will wait for some time to user type. It will not send req. on every keyup method
     // For ex: 'helloWorld' for only send req. for 'helloWorld' not send any req. like 'h' 'he' 'hel'
     fromEvent<any>(this.inputValue.nativeElement, 'keyup')
     .pipe(
       map(ev => ev.target.value),
+      // startWith(''),  // when we refresh app it will use '' as initial search. So it will be search all list of item on initial search
       debounceTime(500),
       distinctUntilChanged(),  // Only emit when the current value is different than the last
-      // switchMap((search) => this.printInputValue(search))    // remove older ongoing req and send only new on
-    ).subscribe(search => this.debounceTimeValue = search);
+      switchMap((search) => this.printInputValue(search))    // remove older ongoing req and send only new on
+    ).subscribe();
+    // .subscribe(search => this.debounceTimeValue = search);
+  }
+
+  rxjsThrottling() {
+    // this method is optional of rxjs debounce method
+    // throttle: Emit value on the leading edge of an interval, but suppress new values until durationSelector has completed.
+    // so here we can use throttletime() to achive operation, and we dont need debouncetime() approach
+    // throttleTime: Emit first value then ignore for specified duration
+    fromEvent<any>(this.inputValue.nativeElement, 'keyup')
+    .pipe(
+      map(ev => ev.target.value),
+      // throttle(() => interval(500)),  // not working as expected when we continuasly typing first time
+      throttleTime(200),  // use instead throttle()
+      ).subscribe(search => this.debounceTimeValue = search);
+  }
+
+  printInputValue(search = ''): Observable<any>{
+    console.log('debounce time', search);
+    this.debounceTimeValue = search;  // Do http call instead
+    return from(search);
   }
 
   rxjsDistinctUntilChanged() {
@@ -60,11 +87,6 @@ export class RxjsSwitchmapComponent implements OnInit, AfterViewInit {
     const source1$ = from([sampleObject, sampleObject, sampleObject]);  //Objects must be same reference
     source1$.pipe(distinctUntilChanged()).subscribe(console.log);  // only emit distinct objects, based on last emitted value
       // output: {name: 'Test'}  
-  }
-
-  printInputValue(search){
-    console.log('debounce time', search);
-    this.debounceTimeValue = search;  // Do http call instead
   }
 
   rxjsOf() {

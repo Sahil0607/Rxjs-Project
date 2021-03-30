@@ -12,8 +12,8 @@ export class RxjsErrorHandlingComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    this.rxjsCatchError();
-    this.catchingErrorPromise();
+    // this.rxjsCatchError();
+    // this.catchingErrorPromise();
   }
 
   rxjsCatchError() {
