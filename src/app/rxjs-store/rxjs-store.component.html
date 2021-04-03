@@ -1,10 +1,17 @@
 <p>rxjs-store works!</p>
-<div>
+<!-- <div>
     <h3>UserId by 1</h3>
-    <p>userId: {{ todoById$.userId | async }}</p>
-    <!-- <p>id: {{todoById$.id | async}}</p>
-    <p>title: {{todoById$.title | async}}</p>
-    <p>completed: {{todoById$.completed | async}}</p> -->
+    <p>userId: {{ (todoById$ | async).userId }}</p>
+    <p>id: {{ (todoById$ | async).id }}</p>
+    <p>title: {{ (todoById$ | async).title }}</p>
+    <p>completed: {{ (todoById$ | async).completed }}</p>
+</div> -->
+<div class="todoById">
+    <h3>UserId by 1</h3>
+    <p>userId: {{ todoById.userId }}</p>
+    <p>id: {{ todoById.id }}</p>
+    <p>title: {{ todoById.title }}</p>
+    <p>completed: {{ todoById.completed }}</p>
 </div>
 <ul>
     <li *ngFor="let todoCompleted$ of todosCompleted$ | async">
