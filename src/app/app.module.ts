@@ -14,6 +14,9 @@ import { RxjsMergeComponent } from './rxjs-merge/rxjs-merge.component';
 import { RxjsExhaustmapComponent } from './rxjs-exhaustmap/rxjs-exhaustmap.component';
 import { RxjsSwitchmapComponent } from './rxjs-switchmap/rxjs-switchmap.component';
 import { RxjsErrorHandlingComponent } from './rxjs-error-handling/rxjs-error-handling.component';
+import { RxjsDebugComponent } from './rxjs-debug/rxjs-debug.component';
+import { RxjsStoreComponent } from './rxjs-store/rxjs-store.component';
+import { RxjsSubjectComponent } from './rxjs-subject/rxjs-subject.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +29,9 @@ import { RxjsErrorHandlingComponent } from './rxjs-error-handling/rxjs-error-han
     RxjsExhaustmapComponent,
     RxjsSwitchmapComponent,
     RxjsErrorHandlingComponent,
+    RxjsDebugComponent,
+    RxjsStoreComponent,
+    RxjsSubjectComponent,
   ],
   imports: [
     BrowserModule,
