@@ -31,7 +31,29 @@ export class BehaviorSubjectService {
   filterById(id: number) {
     return this.todos$.pipe(
       map(todos => todos.find(todo => todo.id == id)), // Also use filter() or findIndex() method
-     
-    );
+      filter(todos => !!todos)  // check initailly when subject is emapty []
+      );
+  }
+
+  saveTodo(todoId, changes): Observable<any> {
+    // get complete array of todos using getValue() method
+    const todos = this.subject.getValue();
+    const todoIndex = todos.findIndex(todo => todo.id == todoId);
+
+    // take todo and copy it
+    const newTodos = todos.slice(0);
+
+    // updating value using immutable way
+    // update local store and using change updated object
+    newTodos[todoIndex] = {
+      ...todos[todoIndex],
+      ...changes  // spread oprator apply on to of the copy
+    }
+
+    this.subject.next(newTodos);  // broadcast new changes
+
+    // return fromPromise(); // fromPromise is no longer a part of the RxJS. You should use from instead.
+    const url = 'https://jsonplaceholder.typicode.com/todos';
+    return this.httpClient.put(`${url}/${todoId}`, changes);
   }
 }
